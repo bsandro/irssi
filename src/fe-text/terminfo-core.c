@@ -6,21 +6,21 @@
 #  define _POSIX_VDISABLE 0
 #endif
 
-#define tput(s) tputs(s, 0, term_putchar)
 inline static int term_putchar(int c)
 {
         return fputc(c, current_term->out);
 }
+#define tput(s) tputs(s, 0, term_putchar)
 
 /* Don't bother including curses.h because of these -
    they might not even be defined there */
-char *tparm();
-int tputs();
+char *tparm(const char *str, ...);
+int tputs(const char *str, int affcnt, int (*putc)(int));
+int setupterm(char *term, int fildes, int *errret);
+char *tigetstr(const char *capname);
+int tigetnum(const char *capname);
+int tigetflag(const char *capname);
 
-int setupterm();
-char *tigetstr();
-int tigetnum();
-int tigetflag();
 #define term_getstr(x, buffer) tigetstr(x.ti_name)
 #define term_getnum(x) tigetnum(x.ti_name);
 #define term_getflag(x) tigetflag(x.ti_name);
